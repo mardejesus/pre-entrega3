@@ -2,10 +2,11 @@
 let productosDiv = document.getElementById("articulos");
 let ordenar = document.getElementById("selectOrden");
 let buscador = document.getElementById("buscador");
-let coincidencia = document.getElementById("coincidencia")
-let modalBodyCarrito = document.getElementById("modal-bodyCarrito")
-let botonCarrito = document.getElementById("botonCarrito")
-let precioTotal = document.getElementById("precioTotal")
+let coincidencia = document.getElementById("coincidencia");
+let modalBodyCarrito = document.getElementById("modal-bodyCarrito");
+let botonCarrito = document.getElementById("botonCarrito");
+let precioTotal = document.getElementById("precioTotal");
+let formBusqueda = document.getElementById("formBusqueda");
 
 
 // carrito (verifico si existe en local storage, si no, lo guardo)
@@ -92,11 +93,6 @@ function mostrarCatalogo(array) {
       actualizarModalCarrito();
     }
   }  
-  
-  window.addEventListener("DOMContentLoaded", () => {
-    mostrarCatalogo(estanteria);
-    actualizarModalCarrito();
-  });
 
   function ordenarMenorMayor(array) {
     const menorMayor = [].concat(array);
@@ -123,23 +119,55 @@ function mostrarCatalogo(array) {
     });
     mostrarCatalogo(arrayAlfabetico);
   }
+
+  function buscarInfo(buscado, array){
+    let busqueda = array.filter(
+       (dato) => dato.nombre.toLowerCase().includes(buscado.toLowerCase())  || dato.tipo.toLowerCase().includes(buscado.toLowerCase()) 
+    )
+    if (busqueda.length === 0) {
+        coincidencia.innerHTML = `<h3>No hay coincidencias con la búsqueda "${buscado}"</h3>`;
+        mostrarCatalogo(busqueda);
+      } else {
+        coincidencia.innerHTML = "";
+        mostrarCatalogo(busqueda);
+      }
+  }
   
-  // ...
-  
+
+  // EVENTOS 
+
   selectOrden.addEventListener("change", () => {
-    switch (selectOrden.value) {
-      case "1":
-        ordenarMayorMenor(estanteria);
-        break;
-      case "2":
-        ordenarMenorMayor(estanteria);
-        break;
-      case "3":
-        ordenarAlfabeticamenteTitulo(estanteria);
-        break;
-      default:
-        mostrarCatalogo(estanteria);
-        break;
+    console.log(selectOrden.value)
+    switch(selectOrden.value){
+       case "1":
+          ordenarMayorMenor(estanteria)
+       break
+       case "2":
+          ordenarMenorMayor(estanteria)
+       break
+       case "3":
+          ordenarAlfabeticamenteTitulo(estanteria)
+       break
+       default:
+          mostrarCatalogo(estanteria)
+       break
     }
-  });
-  
+ })
+
+ buscador.addEventListener("input", () => {
+    buscarInfo(buscador.value, estanteria)
+ })
+ 
+ botonCarrito.addEventListener("click", () => {
+    cargarProductosCarrito(productosEnCarrito)
+ })
+
+window.addEventListener("DOMContentLoaded", () => {
+    mostrarCatalogo(estanteria);
+    actualizarModalCarrito();
+});
+
+formBusqueda.addEventListener("submit", (event) => {
+    event.preventDefault(); // Evitar que el formulario se envíe por defecto
+    buscarInfo(buscador.value, estanteria);
+});
