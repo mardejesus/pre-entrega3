@@ -14,12 +14,13 @@ h1{
     font-size: 3rem;
 }
 
+
 #presentacion{
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    padding: 90px;
+    padding: 90px; 
 }
 
 .nav-link:hover{
